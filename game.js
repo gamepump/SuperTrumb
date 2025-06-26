@@ -12,10 +12,7 @@ const player = {
   ySpeed: 0,
   jumpPower: -12,
   onGround: false,
-  sprite: new Image()
 };
-
-player.sprite.src = "assets/images/player.png";
 
 const keys = {
   left: false,
@@ -24,11 +21,11 @@ const keys = {
 };
 
 function drawPlayer() {
-  ctx.drawImage(player.sprite, player.x, player.y, player.width, player.height);
+  ctx.fillStyle = "red";
+  ctx.fillRect(player.x, player.y, player.width, player.height);
 }
 
 function update() {
-  // Horizontal movement
   if (keys.left) {
     player.x -= moveSpeed;
     if (player.x < 0) player.x = 0;
@@ -38,11 +35,9 @@ function update() {
     if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
   }
 
-  // Vertical movement + gravity
   player.ySpeed += gravity;
   player.y += player.ySpeed;
 
-  // Floor collision
   if (player.y + player.height >= canvas.height) {
     player.y = canvas.height - player.height;
     player.ySpeed = 0;
@@ -59,6 +54,7 @@ function jump() {
 }
 
 document.addEventListener("keydown", e => {
+  console.log("Key down:", e.code);
   if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = true;
   if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = true;
   if (e.code === "ArrowUp" || e.code === "Space") {
@@ -67,6 +63,7 @@ document.addEventListener("keydown", e => {
 });
 
 document.addEventListener("keyup", e => {
+  console.log("Key up:", e.code);
   if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = false;
   if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = false;
 });
@@ -78,9 +75,8 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
 }
 
-player.sprite.onload = () => {
-  gameLoop();
-};
+gameLoop();
+
 
 
 
