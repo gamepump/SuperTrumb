@@ -6,13 +6,15 @@ const gravity = 0.5;
 const player = {
   x: 100,
   y: 300,
-  width: 40,
-  height: 40,
+  width: 60,
+  height: 80,
   ySpeed: 0,
-  jumpPower: -10,
+  jumpPower: -12,
   onGround: false,
   sprite: new Image()
 };
+
+// Make sure to upload your player image to assets/images/player.png
 player.sprite.src = "assets/images/player.png";
 
 function drawPlayer() {
@@ -23,6 +25,7 @@ function update() {
   player.ySpeed += gravity;
   player.y += player.ySpeed;
 
+  // Floor collision
   if (player.y + player.height >= canvas.height) {
     player.y = canvas.height - player.height;
     player.ySpeed = 0;
@@ -39,7 +42,9 @@ function jump() {
 }
 
 document.addEventListener("keydown", e => {
-  if (e.code === "Space") jump();
+  if (e.code === "Space" || e.code === "ArrowUp") {
+    jump();
+  }
 });
 
 function gameLoop() {
@@ -49,8 +54,9 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
 }
 
-// Start the game after the sprite loads
+// Start the game only when the sprite image loads
 player.sprite.onload = () => {
   gameLoop();
 };
+
 
