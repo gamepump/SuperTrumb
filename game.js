@@ -2,6 +2,7 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 const gravity = 0.5;
+const moveSpeed = 5;
 
 const player = {
   x: 100,
@@ -14,14 +15,30 @@ const player = {
   sprite: new Image()
 };
 
-// Make sure to upload your player image to assets/images/player.png
 player.sprite.src = "assets/images/player.png";
+
+const keys = {
+  left: false,
+  right: false,
+  up: false
+};
 
 function drawPlayer() {
   ctx.drawImage(player.sprite, player.x, player.y, player.width, player.height);
 }
 
 function update() {
+  // Horizontal movement
+  if (keys.left) {
+    player.x -= moveSpeed;
+    if (player.x < 0) player.x = 0;
+  }
+  if (keys.right) {
+    player.x += moveSpeed;
+    if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+  }
+
+  // Vertical movement + gravity
   player.ySpeed += gravity;
   player.y += player.ySpeed;
 
@@ -42,9 +59,16 @@ function jump() {
 }
 
 document.addEventListener("keydown", e => {
-  if (e.code === "Space" || e.code === "ArrowUp") {
+  if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = true;
+  if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = true;
+  if (e.code === "ArrowUp" || e.code === "Space") {
     jump();
   }
+});
+
+document.addEventListener("keyup", e => {
+  if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = false;
+  if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = false;
 });
 
 function gameLoop() {
@@ -54,9 +78,9 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
 }
 
-// Start the game only when the sprite image loads
 player.sprite.onload = () => {
   gameLoop();
 };
+
 
 
