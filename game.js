@@ -20,9 +20,15 @@ const keys = {
   up: false
 };
 
+const playerImg = new Image();
+playerImg.src = "assets/player.png";
+
+playerImg.onload = function() {
+  gameLoop();
+};
+
 function drawPlayer() {
-  ctx.fillStyle = "red";
-  ctx.fillRect(player.x, player.y, player.width, player.height);
+  ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
 }
 
 function update() {
@@ -54,7 +60,6 @@ function jump() {
 }
 
 document.addEventListener("keydown", e => {
-  console.log("Key down:", e.code);
   if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = true;
   if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = true;
   if (e.code === "ArrowUp" || e.code === "Space") {
@@ -63,7 +68,6 @@ document.addEventListener("keydown", e => {
 });
 
 document.addEventListener("keyup", e => {
-  console.log("Key up:", e.code);
   if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = false;
   if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = false;
 });
@@ -75,7 +79,6 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
 }
 
-gameLoop();
 
 
 
