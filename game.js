@@ -1,83 +1,48 @@
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
 
-const gravity = 0.5;
-const moveSpeed = 5;
+const mario = document.querySelector('.mario');
+const pipe = document.querySelector('.pipe');
+const clouds = document.querySelector('.clouds');
+const gameOver = document.querySelector('.game_over');
 
-const player = {
-  x: 100,
-  y: 300,
-  width: 60,
-  height: 80,
-  ySpeed: 0,
-  jumpPower: -12,
-  onGround: false,
-};
+const jump = () => {
+  mario.classList.add('jump');
 
-const keys = {
-  left: false,
-  right: false,
-  up: false
-};
-
-const playerImg = new Image();
-playerImg.src = "assets/player.png";
-
-playerImg.onload = function() {
-  gameLoop();
-};
-
-function drawPlayer() {
-  ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
+  setTimeout(() => {
+    mario.classList.remove('jump');
+  }, 500);
 }
 
-function update() {
-  if (keys.left) {
-    player.x -= moveSpeed;
-    if (player.x < 0) player.x = 0;
+
+const loop = setInterval(() => {
+
+  const pipePosition = pipe.offsetLeft;
+  const marioPosition = +window.getComputedStyle(mario).bottom.replace('px', '');
+  const cloudsPosition = +window.getComputedStyle(clouds).left.replace('px', '');
+
+  
+  if(pipePosition <= 120 && pipePosition > 0 && marioPosition < 80) {
+
+    pipe.style.animation = 'none';
+    pipe.style.left = `${pipePosition}px`;
+
+    mario.style.animation = 'none';
+    mario.style.bottom = `${marioPosition}px`;
+
+    clouds.style.animation = 'none';
+    clouds.style.left = `${cloudsPosition}px`;
+
+    mario.src = "images/game-over.png";
+    mario.style.width = '75px';
+    mario.style.marginLeft = '50px';
+
+    gameOver.textContent = "Game over";
+
+    clearInterval(loop);
   }
-  if (keys.right) {
-    player.x += moveSpeed;
-    if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
-  }
 
-  player.ySpeed += gravity;
-  player.y += player.ySpeed;
+}, 10)
 
-  if (player.y + player.height >= canvas.height) {
-    player.y = canvas.height - player.height;
-    player.ySpeed = 0;
-    player.onGround = true;
-  } else {
-    player.onGround = false;
-  }
-}
-
-function jump() {
-  if (player.onGround) {
-    player.ySpeed = player.jumpPower;
-  }
-}
-
-document.addEventListener("keydown", e => {
-  if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = true;
-  if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = true;
-  if (e.code === "ArrowUp" || e.code === "Space") {
-    jump();
-  }
-});
-
-document.addEventListener("keyup", e => {
-  if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = false;
-  if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = false;
-});
-
-function gameLoop() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  update();
-  drawPlayer();
-  requestAnimationFrame(gameLoop);
-}
+document.addEventListener('keydown', jump);
 
 
 
