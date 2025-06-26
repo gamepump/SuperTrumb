@@ -35,9 +35,12 @@ function update() {
 function jump() {
   if (player.onGround) {
     player.ySpeed = player.jumpPower;
-    // Add sound here
   }
 }
+
+document.addEventListener("keydown", e => {
+  if (e.code === "Space") jump();
+});
 
 function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -46,8 +49,8 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
 }
 
-document.addEventListener("keydown", e => {
-  if (e.code === "Space") jump();
-});
+// Start the game after the sprite loads
+player.sprite.onload = () => {
+  gameLoop();
+};
 
-gameLoop();
